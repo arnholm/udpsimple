@@ -52,10 +52,10 @@ public:
       m_io_context.run();
    }
 
-	virtual ~udp_receiver()
-	{
-		m_socket.close();
-	}
+   virtual ~udp_receiver()
+   {
+      m_socket.close();
+   }
 
 private:
   void start_receive()
