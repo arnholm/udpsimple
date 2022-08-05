@@ -52,6 +52,9 @@ public:
 		m_socket.send_to(boost::asio::buffer(msg, msg.size()), m_receiver_endpoint);
 	}
 
+	std::string  ipaddress() const { return m_ipaddress; }
+	int          udp_port() const  { return m_udp_port; }
+
 private:
    std::string                     m_ipaddress;         // remote IP-address (on receiving end)
    int                             m_udp_port;          // remote UDP port (on receiving end)

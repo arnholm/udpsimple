@@ -57,6 +57,8 @@ public:
       m_socket.close();
    }
 
+	int          udp_port() const  { return m_udp_port; }
+
 private:
   void start_receive()
    {
