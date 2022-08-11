@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <chrono>
 #include <thread>
@@ -9,10 +10,12 @@
 
 int main(int argc, char **argv)
 {
+   int udp_port = 10253; // default UDP port
+
    if(argc < 2) {
-      std::cout << "Insufficient arguments provided, please use one of" << std::endl;
-      std::cout << "   -s <ip-receiver>  : send" << std::endl;
-      std::cout << "   -r                : receive" << std::endl;
+      std::cout << "Insufficient arguments provided, please use one of (default port=10253):" << std::endl;
+      std::cout << "   -s <ip-receiver>  [<port>] : send " << std::endl;
+      std::cout << "   -r                [<port>] : receive " << std::endl;
       return 1;
    }
    std::string arg(argv[1]);
@@ -24,8 +27,13 @@ int main(int argc, char **argv)
       // ip-address for receiver
       std::string ipaddress(argv[2]);
 
+      if(argc >=4) {
+         std::istringstream inport(argv[3]);
+         inport >> udp_port;
+      }
+
       // loop and send a message every second forever
-      udp_sender udp(ipaddress);
+      udp_sender udp(ipaddress,udp_port);
       size_t counter=0;
       while(true) {
          std::string msg = "Hello from udp_sender " + std::to_string(++counter);
@@ -40,8 +48,14 @@ int main(int argc, char **argv)
 
       // RECEIVER
       // ========
+
+      if(argc >=3) {
+         std::istringstream inport(argv[2]);
+         inport >> udp_port;
+      }
+
       try  {
-         udp_receiver receiver;
+         udp_receiver receiver(udp_port);
          receiver.receive(std::make_shared<udp_consumer>());
       }
       catch (std::exception& e)  {
